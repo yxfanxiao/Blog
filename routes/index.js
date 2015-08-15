@@ -18,7 +18,6 @@ router.post('/login', sign.login);
 
 router.get('/post', post.showPost);
 router.post('/post', post.post);
-
 router.get('/logout', sign.logout);
 
 module.exports = router;

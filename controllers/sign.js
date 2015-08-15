@@ -3,6 +3,7 @@ var moment = require('moment');
 var Post = require('../proxy').Post;
 var User = require('../proxy').User;
 var crypto = require('crypto');
+var markdown = require('markdown').markdown;
 
 exports.index = function (req, res, next) {
 	var user = req.session.user ? req.session.user.name : '游客';
@@ -12,7 +13,8 @@ exports.index = function (req, res, next) {
 		}
 		var postDate = [];
 		docs.forEach(function (post, index) {
-			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');			
+			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
+			post.postContent = markdown.toHTML(post.postContent);		
 		});
 		console.log(docs);
 		res.render('index', {

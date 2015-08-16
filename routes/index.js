@@ -20,4 +20,7 @@ router.get('/post', post.showPost);
 router.post('/post', post.post);
 router.get('/logout', sign.logout);
 
+router.get('/upload', post.showPostPic);
+router.post('/upload', post.postPic);
+
 module.exports = router;

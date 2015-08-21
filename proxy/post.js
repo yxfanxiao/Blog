@@ -16,3 +16,16 @@ exports.getPostByUser = function (name, callback) {
 exports.getPostById = function (id, callback) {
 	Post.findById({ _id: id }, callback);
 };
+
+exports.update = function (id, title, postContent,callback) {
+	Post.update({ _id: id }, {
+		$set: {
+			title: title,
+			postContent: postContent
+		}
+	}, callback);
+};
+
+exports.removeById = function (id, callback) {
+	Post.remove({ _id: id }, callback);
+};

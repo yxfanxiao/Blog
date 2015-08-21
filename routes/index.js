@@ -61,10 +61,11 @@ router.get('/u/:name/:article', function (req, res, next) {
 			req.flash('error', '文章不存在');
 			return res.redirect('/');
 		}
-		console.log('post');
+		// console.log('post');
 		var postDate = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
 		res.render('article', {
 			title: post.title,
+			_id: req.params.article,
 			name: post.name,
 			postDate: postDate,
 			postContent: markdown.toHTML(post.postContent),
@@ -73,6 +74,61 @@ router.get('/u/:name/:article', function (req, res, next) {
 			user: req.session.user			
 		});
 	});
+});
+
+router.get('/edit/:article', function (req, res, next) {
+	var user = req.session.user;
+	var post_id = req.params.article;
+	Post.getPostById(post_id, function (err, post) {
+		// console.log(post);
+		if (!post) {
+			req.flash('error', '文章不存在');
+			return res.redirect('/');
+		}
+		// console.log('post');
+		var postDate = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
+		res.render('edit', {
+			title: post.title,
+			_id: post_id,
+			name: post.name,
+			postDate: postDate,
+			postContent: post.postContent,
+			success: req.flash('success').toString(),
+			error: req.flash('error').toString(),
+			user: req.session.user			
+		});
+	});
+});
+
+router.post('/edit/:article', function (req, res, next) {
+	var user = req.session.user;
+	var post_id = req.params.article;
+	var url = '/edit/' + post_id;
+	Post.update(post_id, req.body.title, req.body.postContent, function (err, post) {
+		if (err) {
+			req.flash('err', err);
+			return res.redirect(url);
+		}
+		req.flash('success', '修改成功！');
+		res.redirect(url);
+	});
+});
+
+router.get('/remove/:name/:article', function (req, res, next) {
+	var user = req.session.user;
+	if (user.name !== req.params.name) {
+		req.flash('err', '请勿删除他人的文章！');
+		return res.redirect('back');
+	}
+	var post_id = req.params.article;
+	Post.removeById(post_id, function (err) {
+		if (err) {
+			req.flash('err', '删除失败！');
+			return res.redirect('/');
+		}
+		req.flash('success', '删除成功！');
+		res.redirect('/');
+	});	
 });
 
 module.exports = router;

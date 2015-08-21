@@ -1,10 +1,11 @@
 <%- include header %>
 <% if (user) { %>
 <% posts.forEach(function (post, index) { %>
-	<p><h2><a href="#"><%= post.title %></a></h2></p>
+	<p><h2><a href="/u/<%= post.name %>/<%= post.id %>"><%= post.title %></a></h2></p>
 	<p class="info">
-		作者：<a href="#"><%= post.name %></a>
+		作者：<a href="/u/<%= post.name %>"><%= post.name %></a>
 		日期：<%= postDate[index] %>
+		
 	</p>
 	<p><%- post.postContent %></p>
 <% }) %>

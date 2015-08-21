@@ -12,3 +12,7 @@ exports.newPostSave = function (name, title, postContent, callback) {
 exports.getPostByUser = function (name, callback) {
 	Post.find({ name: name }, callback);
 };
+
+exports.getPostById = function (id, callback) {
+	Post.findById({ _id: id }, callback);
+};

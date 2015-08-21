@@ -16,7 +16,7 @@ exports.index = function (req, res, next) {
 			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
 			post.postContent = markdown.toHTML(post.postContent);		
 		});
-		console.log(docs);
+		// console.log(docs);
 		res.render('index', {
 			title: '主页',
 			user: req.session.user,
@@ -63,13 +63,18 @@ exports.showLogin = function (req, res, next) {
 }
 
 exports.login = function (req, res, next) {
+	// console.log('input password:' + req.body.password);
 	var md5 = crypto.createHash('md5'),
 		password = md5.update(req.body.password).digest('hex');
+	// console.log('input password:' + password);
 	User.getUserByName(req.body.name, function (err, user) {
 		if (!user) {
 			req.flash('error', '用户不存在！');
 			return res.redirect('/login');
 		}
+		console.log(user);
+		console.log(user.password);
+		console.log(password);
 		if(user.password != password) {
 			req.flash('error', '密码错误！');
 			console.log(user);

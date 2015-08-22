@@ -62,6 +62,9 @@ router.get('/u/:name/:article', function (req, res, next) {
 			return res.redirect('/');
 		}
 		// console.log('post');
+		post.comments.forEach(function (comment) {
+			comment.comment = markdown.toHTML(comment.comment);
+		});
 		var postDate = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
 		res.render('article', {
 			title: post.title,
@@ -71,8 +74,20 @@ router.get('/u/:name/:article', function (req, res, next) {
 			postContent: markdown.toHTML(post.postContent),
 			success: req.flash('success').toString(),
 			error: req.flash('error').toString(),
-			user: req.session.user			
+			user: req.session.user,
+			comments: post.comments			
 		});
+	});
+});
+
+router.post('/u/:name/:article', function (req, res, next) {
+	Post.addComment(req.params.article, req.body.name, req.body.content, function (err) {
+		if (err) {
+			req.flash('err', err);
+			return res.redirect('/');
+		}
+		req.flash('success', '评论提交成功！');
+		res.redirect('back');
 	});
 });
 

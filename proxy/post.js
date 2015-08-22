@@ -29,3 +29,13 @@ exports.update = function (id, title, postContent,callback) {
 exports.removeById = function (id, callback) {
 	Post.remove({ _id: id }, callback);
 };
+
+
+exports.addComment = function (id, name, comment, callback) {
+	Post.findByIdAndUpdate(
+		id,
+		{ $push: { comments: { name: name, comment: comment }}},
+		{safe: true, upsert: true},
+		callback
+		);
+};

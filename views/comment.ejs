@@ -1,0 +1,14 @@
+<br/>
+<% comments.forEach(function (comment, index) { %>
+	<p><a href="<%= comment.name %>"><%= comment.name %></a></p>
+	<span class="info">回复于<%= comment.date %></span>
+	<p><%- comment.comment %></p>
+<% }) %>
+
+<form method="post">
+	<% if (user) { %>
+		姓名: <input type="text" name="name" value="<%= user.name %>"><br/>
+	<% } %>
+	<textarea name="content" rows="5" cols="80"></textarea><br/>
+	<input type="submit" value="留言">
+</form>

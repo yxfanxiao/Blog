@@ -17,6 +17,11 @@ var PostSchema = new Schema({
 	title: { type: String },
 	postContent: { type: String },
 	date: { type: Date, default: Date.now },
+	comments: [{
+		name: { type: String },
+		date: { type: Date, default: Date.now },
+		comment: { type: String }
+	}]
 });
 
 exports.Post = mongoose.model('Post', PostSchema);					

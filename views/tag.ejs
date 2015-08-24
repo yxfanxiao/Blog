@@ -1,0 +1,7 @@
+<%- include header %>
+<% posts.forEach(function (post, index) { %>
+    <time><%= postDate[index] %></time>
+    <a href="/u/<%= post.name %>/<%= post._id %>"><%= post.title %></a>
+    <br/>
+<% }) %>
+<%- include footer %>

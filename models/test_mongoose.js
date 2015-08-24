@@ -13,6 +13,14 @@ var Schema = mongoose.Schema
 //   	  console.log(docs)
 //   });
 
-Post.count({name: 'liu'}, function (err, docs) {
+// Post.count({name: 'liu'}, function (err, docs) {
+// 	console.log(docs)
+// })
+
+// Post.distinct('tags', function (err, result) {
+// 	console.log(result)
+// })
+
+Post.find({ tags: '1' }, { 'name', '_id', 'title' }, { sort: '-date' },function (err, docs) {
 	console.log(docs)
 })

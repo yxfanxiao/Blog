@@ -17,6 +17,7 @@ var PostSchema = new Schema({
 	title: { type: String },
 	postContent: { type: String },
 	date: { type: Date, default: Date.now },
+	tags: [{ type: String }],
 	comments: [{
 		name: { type: String },
 		date: { type: Date, default: Date.now },

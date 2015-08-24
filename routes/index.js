@@ -96,6 +96,7 @@ router.get('/u/:name/:article', function (req, res, next) {
 			title: post.title,
 			_id: req.params.article,
 			name: post.name,
+			post: post,
 			postDate: postDate,
 			postContent: markdown.toHTML(post.postContent),
 			success: req.flash('success').toString(),
@@ -103,6 +104,45 @@ router.get('/u/:name/:article', function (req, res, next) {
 			user: req.session.user,
 			comments: post.comments			
 		});
+	});
+});
+
+router.get('/tags', function (req, res, next) {
+  Post.getTags(function (err, posts) {
+    if (err) {
+      req.flash('error', err); 
+      return res.redirect('/');
+    }
+    res.render('tags', {
+      title: '标签',
+      posts: posts,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
+  });
+});
+
+router.get('/tags/:tag', function (req, res, next) {
+	Post.getPostByTag(req.params.tag, function (err, posts) {
+		if (err) {
+  			req.flash('error',err); 
+  			return res.redirect('/');
+  		}
+  		console.log('tag:' + posts);
+  		var postDate = [];
+  		posts.forEach(function (post, index) {
+  			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
+  		})
+  		res.render('tag', {
+  		 	title: 'TAG:' + req.params.tag,
+  		 	posts: posts,
+  		 	postDate: postDate,
+  		 	user: req.session.user,
+  		 	success: req.flash('success').toString(),
+  		 	error: req.flash('error').toString()
+  		});
+
 	});
 });
 

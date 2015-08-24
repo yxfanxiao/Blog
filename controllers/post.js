@@ -23,8 +23,9 @@ exports.showPost = function (req, res, next) {
 exports.post = function (req, res, next) {
 	var currentUser = req.session.user,
 		title = req.body.title,
+		tags = [req.body.tag1, req.body.tag2, req.body.tag3],
 		postContent = req.body.post;
-	Post.newPostSave(currentUser.name, title, postContent, function (err) {
+	Post.newPostSave(currentUser.name, title, tags, postContent, function (err) {
 		if (err) {
 			req.flash('error', err);
 			return res.redirect('/');

@@ -25,13 +25,14 @@ router.get('/upload', post.showPostPic);
 router.post('/upload', post.postPic);
 
 router.get('/u/:name', function (req, res, next) {
+	var page = req.query.p ? parseInt(req.query.p) : 1;
 	User.getUserByName(req.params.name, function (err, user) {
 		// console.dir(user);
 		if (!user) {
 			req.flash('error', '用户不存在');
 			return res.redirect('/');
 		}
-		Post.getPostByUser(user.name, function (err, docs) {
+		Post.get2Post(user.name, page, function (err, docs) {
 			if (err) {
 				req.flash('error', err)
 				return res.redirect('/');
@@ -41,16 +42,41 @@ router.get('/u/:name', function (req, res, next) {
 				postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
 				post.postContent = markdown.toHTML(post.postContent);		
 			});
-			// console.log(docs);
-			res.render('user', {
-				title: user.name,
-				posts: docs,
-				user: req.session.user,
-				postDate: postDate,
-				success: req.flash('success').toString(),
-				error: req.flash('error').toString() 
+			Post.getPostCount(user.name, function (err,count) {
+				res.render('user', {
+					title: user.name,
+					posts: docs,
+					page: page,
+					isFirstPage: (page - 1) == 0,
+					isLastPage: (page - 1) * 2 + docs.length == count,			
+					user: req.session.user,
+					postDate: postDate,
+					success: req.flash('success').toString(),
+					error: req.flash('error').toString() 
+				});
 			});
+			
 		});
+		// Post.getPostByUser(user.name, function (err, docs) {
+		// 	if (err) {
+		// 		req.flash('error', err)
+		// 		return res.redirect('/');
+		// 	}
+		// 	var postDate = [];
+		// 	docs.forEach(function (post, index) {
+		// 		postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
+		// 		post.postContent = markdown.toHTML(post.postContent);		
+		// 	});
+		// 	// console.log(docs);
+		// 	res.render('user', {
+		// 		title: user.name,
+		// 		posts: docs,
+		// 		user: req.session.user,
+		// 		postDate: postDate,
+		// 		success: req.flash('success').toString(),
+		// 		error: req.flash('error').toString() 
+		// 	});
+		// });
 	});
 });
 router.get('/u/:name/:article', function (req, res, next) {

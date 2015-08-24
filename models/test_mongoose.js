@@ -1,9 +1,18 @@
-require('./db')								// 单独测试时用
-var Post = require('../proxy').Post;
+var Post = require('./db').Post								// 单独测试时用
+// var Post = require('../proxy').Post
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-Post.addComment('55d76e6a874cbd583e083113', '评论家', '这是我的第一条评论', function (err, model) {
-	console.log('到这了');
-	console.log(model);
-});
+
+// Post
+//   .find({ name: 'liu' })
+//   .sort('-date')
+//   .skip((1 - 1) * 2)
+//   .limit(2)
+//   .exec(function (err,docs) {
+//   	  console.log(docs)
+//   });
+
+Post.count({name: 'liu'}, function (err, docs) {
+	console.log(docs)
+})

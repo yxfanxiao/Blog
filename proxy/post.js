@@ -13,6 +13,24 @@ exports.getPostByUser = function (name, callback) {
 	Post.find({ name: name }, callback);
 };
 
+// 每页2篇，仅为试一下分页
+exports.get2Post = function (name, page, callback) {
+	Post
+	  .count({ name: name }, function (err, num) {
+	  	console.log(num)
+		Post
+	     .find({ name: name })
+	     .sort('-date')
+	     .skip((page - 1) * 2)
+	     .limit(2)
+	     .exec(callback);  	
+	  });
+};
+
+exports.getPostCount = function (name, callback) {
+	Post.count({ name: name }, callback);
+}
+
 exports.getPostById = function (id, callback) {
 	Post.findById({ _id: id }, callback);
 };

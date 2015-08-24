@@ -18,7 +18,7 @@ exports.showPost = function (req, res, next) {
 		success: req.flash('success').toString(),
 		error: req.flash('error').toString()
  	});
-}
+};
 
 exports.post = function (req, res, next) {
 	var currentUser = req.session.user,
@@ -32,7 +32,7 @@ exports.post = function (req, res, next) {
 		req.flash('success', '发布成功！');
 		res.redirect('/');
 	});
-}
+};
 
 exports.showPostPic = function (req, res, next) {
 	res.render('upload', {
@@ -41,7 +41,7 @@ exports.showPostPic = function (req, res, next) {
 		success: req.flash('success').toString(),
 		error: req.flash('error').toString()
 	});
-}
+};
 
 exports.postPic = function (req, res, next) {
 	upload(req, res, function (err) {
@@ -49,5 +49,4 @@ exports.postPic = function (req, res, next) {
 		req.flash('success', '文件上传成功！');
 		res.redirect('/upload');
 	});
-	
-}
+};

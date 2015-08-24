@@ -7,7 +7,8 @@ var markdown = require('markdown').markdown;
 
 exports.index = function (req, res, next) {
 	var user = req.session.user ? req.session.user.name : '游客';
-	Post.getPostByUser(user, function (err, docs) {
+	var page = req.query.p ? parseInt(req.query.p) : 1;
+	Post.get2Post(user.name, page, function (err, docs) {
 		if (err) {
 			posts = [];
 		}
@@ -16,17 +17,40 @@ exports.index = function (req, res, next) {
 			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
 			post.postContent = markdown.toHTML(post.postContent);		
 		});
-		// console.log(docs);
-		res.render('index', {
-			title: '主页',
-			user: req.session.user,
-			posts: docs,
-			postDate: postDate,
-			success: req.flash('success').toString(),
-			error: req.flash('error').toString()
-		 });
+		Post.getPostCount(user.name, function (err,count) {
+			res.render('index', {
+				title: '主页',
+				user: req.session.user,
+				posts: docs,
+				page: page,
+				isFirstPage: (page - 1) == 0,
+				isLastPage: (page - 1) * 2 + docs.length == count,
+				postDate: postDate,
+				success: req.flash('success').toString(),
+				error: req.flash('error').toString()
+			});
+		});
 	});
-}
+	// Post.getPostByUser(user, function (err, docs) {
+	// 	if (err) {
+	// 		posts = [];
+	// 	}
+	// 	var postDate = [];
+	// 	docs.forEach(function (post, index) {
+	// 		postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');	
+	// 		post.postContent = markdown.toHTML(post.postContent);		
+	// 	});
+	// 	// console.log(docs);
+	// 	res.render('index', {
+	// 		title: '主页',
+	// 		user: req.session.user,
+	// 		posts: docs,
+	// 		postDate: postDate,
+	// 		success: req.flash('success').toString(),
+	// 		error: req.flash('error').toString()
+	// 	 });
+	// });
+};
 
 exports.showReg = function (req, res, next) {
  	res.render('reg', { 
@@ -35,7 +59,7 @@ exports.showReg = function (req, res, next) {
 		success: req.flash('success').toString(),
 		error: req.flash('error').toString()
  	});
-}
+};
 
 exports.reg = function (req, res, next) {
 	var name = req.body.name,	
@@ -51,7 +75,7 @@ exports.reg = function (req, res, next) {
 		req.flash('success', '注册成功！');
 		res.redirect('/');
 	});
-}
+};
 
 exports.showLogin = function (req, res, next) {
  	res.render('login', { 
@@ -60,7 +84,7 @@ exports.showLogin = function (req, res, next) {
  		success: req.flash('success').toString(),
  		error: req.flash('error').toString() 
  	});
-}
+};
 
 exports.login = function (req, res, next) {
 	// console.log('input password:' + req.body.password);
@@ -84,10 +108,10 @@ exports.login = function (req, res, next) {
 		req.flash('success', '登录成功！')
 		res.redirect('/');
 	});
-}
+};
 
 exports.logout = function (req, res, next) {
  	req.session.user = null;
  	req.flash('success', '登出成功！');
  	res.redirect('./');
-}
+};

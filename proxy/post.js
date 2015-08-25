@@ -66,3 +66,7 @@ exports.getTags = function (callback) {
 exports.getPostByTag = function (tag, callback) {
 	Post.find({ tags: tag }, 'name _id title date', { sort: '-date' }, callback);
 };
+
+exports.incPV = function (id, callback) {
+	Post.update({ _id: id }, { $inc: { pv: 1 }}, callback);
+};

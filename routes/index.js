@@ -82,27 +82,31 @@ router.get('/u/:name', function (req, res, next) {
 router.get('/u/:name/:article', function (req, res, next) {
 	// console.log(req.params.article);
 	Post.getPostById(req.params.article, function (err, post) {
-		// console.log(post);
 		if (!post) {
 			req.flash('error', '文章不存在');
 			return res.redirect('/');
 		}
-		// console.log('post');
-		post.comments.forEach(function (comment) {
-			comment.comment = markdown.toHTML(comment.comment);
-		});
-		var postDate = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
-		res.render('article', {
-			title: post.title,
-			_id: req.params.article,
-			name: post.name,
-			post: post,
-			postDate: postDate,
-			postContent: markdown.toHTML(post.postContent),
-			success: req.flash('success').toString(),
-			error: req.flash('error').toString(),
-			user: req.session.user,
-			comments: post.comments			
+		Post.incPV(req.params.article, function (err) {
+			if (err) {
+				req.flash('error', '增加阅读统计出现错误 (  -.-)');
+				return res.redirect('/');
+			}
+			post.comments.forEach(function (comment) {
+				comment.comment = markdown.toHTML(comment.comment);
+			});
+			var postDate = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
+			res.render('article', {
+				title: post.title,
+				_id: req.params.article,
+				name: post.name,
+				post: post,
+				postDate: postDate,
+				postContent: markdown.toHTML(post.postContent),
+				success: req.flash('success').toString(),
+				error: req.flash('error').toString(),
+				user: req.session.user,
+				comments: post.comments			
+			});			
 		});
 	});
 });
@@ -172,6 +176,7 @@ router.get('/edit/:article', function (req, res, next) {
 			title: post.title,
 			_id: post_id,
 			name: post.name,
+			post: post,
 			postDate: postDate,
 			postContent: post.postContent,
 			success: req.flash('success').toString(),

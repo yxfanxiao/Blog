@@ -22,7 +22,8 @@ var PostSchema = new Schema({
 		name: { type: String },
 		date: { type: Date, default: Date.now },
 		comment: { type: String }
-	}]
+	}],
+	pv: { type: Number, default: 0 }
 });
 
 exports.Post = mongoose.model('Post', PostSchema);					

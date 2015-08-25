@@ -21,6 +21,12 @@ var Schema = mongoose.Schema
 // 	console.log(result)
 // })
 
-Post.find({ tags: '1' }, { 'name', '_id', 'title' }, { sort: '-date' },function (err, docs) {
+// Post.find({ tags: '1' }, { 'name _id title' }, { sort: '-date' },function (err, docs) {
+// 	console.log(docs)
+// })
+
+var item = '1'
+var search = new RegExp(item, 'i')
+Post.find({ title: search}, "name title date", { sort: '-date' }, function (err, docs) {
 	console.log(docs)
 })

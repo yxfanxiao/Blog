@@ -70,3 +70,8 @@ exports.getPostByTag = function (tag, callback) {
 exports.incPV = function (id, callback) {
 	Post.update({ _id: id }, { $inc: { pv: 1 }}, callback);
 };
+
+exports.findPostByTitle = function (title, callback) {
+	var search = new RegExp(title, 'i');
+	Post.find({ title: search}, "name title date _id", { sort: '-date' }, callback);
+};

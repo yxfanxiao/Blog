@@ -150,6 +150,27 @@ router.get('/tags/:tag', function (req, res, next) {
 	});
 });
 
+router.get('/search', function (req, res, next) {
+  	Post.findPostByTitle(req.query.keyword, function (err, posts) {
+    	if (err) {
+       	  req.flash('error', err); 
+      	  return res.redirect('/');
+    	}
+    	var postDate = [];
+  		posts.forEach(function (post, index) {
+  			postDate[index] = moment(post.date).format('YYYY-MM-DD HH:mm:ss');
+  		})
+    	res.render('search', {
+    	  title: "SEARCH:" + req.query.keyword,
+    	  posts: posts,
+    	  postDate: postDate,
+    	  user: req.session.user,
+    	  success: req.flash('success').toString(),
+    	  error: req.flash('error').toString()
+    	});
+  });
+});
+
 router.post('/u/:name/:article', function (req, res, next) {
 	Post.addComment(req.params.article, req.body.name, req.body.content, function (err) {
 		if (err) {

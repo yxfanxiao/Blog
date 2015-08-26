@@ -6,6 +6,14 @@ Temporarily build a simple blog via Nodejs, MongoDB.<br>
 ## Function
 * sign up,log in,log out
 * post blogs (markdown)
+* post files
+* user and article interface
+* edit and delete
+* comment
+* pagination
+* tags
+* pv
+* search
 
 ## Study Resource
 * [Cnode社区源码](https://github.com/yxfanxiao/nodeclub)
